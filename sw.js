@@ -4,13 +4,13 @@
  * Enables 100% offline browsing of catalog and shopping cart
  */
 
-const CACHE_NAME = 'achaari-bliss-v1.2';
+const CACHE_NAME = 'achaari-bliss-v2.0';
 const STATIC_ASSETS = [
   './',
   './index.html',
-  './styles.css',
-  './app.js',
-  './products.js',
+  './assets/css/styles.css',
+  './assets/js/products.js',
+  './assets/js/app.js',
   './manifest.json'
 ];
 

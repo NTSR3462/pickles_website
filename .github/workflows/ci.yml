@@ -29,6 +29,11 @@ jobs:
           node -c sw.js
           echo "✅ All JavaScript files passed syntax compilation without errors."
 
+      - name: Run Automated Cart & Business Logic Unit Tests
+        run: |
+          node tests/cart.test.js
+          echo "✅ All automated unit tests passed."
+
       - name: Validate JSON Files
         run: |
           node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8'));"

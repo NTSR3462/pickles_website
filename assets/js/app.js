@@ -1163,6 +1163,25 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
         }
       }
     });
+
+    // Network Connectivity State (PWA Offline)
+    const offlineBanner = document.getElementById('network-offline-banner');
+    function checkConnectivity() {
+      if (!navigator.onLine) {
+        if (offlineBanner) offlineBanner.style.display = 'block';
+      } else {
+        if (offlineBanner) offlineBanner.style.display = 'none';
+      }
+    }
+    window.addEventListener('online', () => {
+      checkConnectivity();
+      showToast('Internet connection restored! 🌐');
+    });
+    window.addEventListener('offline', () => {
+      checkConnectivity();
+      showToast('You are offline. Your cart and catalog remain accessible! 📡');
+    });
+    checkConnectivity();
   }
 
   function applyCoupon() {

@@ -1937,3 +1937,16 @@ a {
   background: var(--primary-color);
   transform: translateY(-3px);
 }
+
+.network-offline-banner {
+  background: #1C1917;
+  color: #FCD34D;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-bottom: 2px solid #D97706;
+  position: sticky;
+  top: 0;
+  z-index: 105;
+}

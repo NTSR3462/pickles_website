@@ -1192,6 +1192,50 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
       showToast('You are offline. Your cart and catalog remain accessible! 📡');
     });
     checkConnectivity();
+
+    // Customer Review Submission
+    const btnOpenReview = document.getElementById('btn-open-review');
+    const reviewModal = document.getElementById('review-modal');
+    const reviewForm = document.getElementById('review-form');
+
+    if (btnOpenReview && reviewModal) {
+      btnOpenReview.addEventListener('click', () => {
+        reviewModal.classList.add('active');
+        reviewModal.setAttribute('aria-hidden', 'false');
+      });
+    }
+
+    if (reviewForm) {
+      reviewForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = escapeHTML(document.getElementById('review-name').value.trim());
+        const city = escapeHTML(document.getElementById('review-city').value.trim());
+        const rating = parseInt(document.getElementById('review-rating').value, 10) || 5;
+        const comment = escapeHTML(document.getElementById('review-comment').value.trim());
+        const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+
+        const reviewsGrid = document.querySelector('.reviews-grid');
+        if (reviewsGrid) {
+          const card = document.createElement('div');
+          card.className = 'review-card';
+          card.innerHTML = `
+            <div class="review-stars">${stars}</div>
+            <p class="review-text">"${comment}"</p>
+            <div class="reviewer-meta">
+              <div class="reviewer-avatar">${name.charAt(0).toUpperCase()}</div>
+              <div class="reviewer-info">
+                <h4>${name}</h4>
+                <span>✓ Verified Buyer • ${city}</span>
+              </div>
+            </div>
+          `;
+          reviewsGrid.prepend(card);
+        }
+        reviewForm.reset();
+        closeModal('review-modal');
+        showToast('Thank you! Your review has been added. ⭐');
+      });
+    }
   }
 
   function applyCoupon() {

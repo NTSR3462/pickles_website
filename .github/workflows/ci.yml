@@ -1,4 +1,4 @@
-name: CI Code Quality & Validation
+name: CI Code Quality & Security Audit
 
 on:
   push:
@@ -53,4 +53,87 @@ jobs:
               }
             }
             console.log('✅ All production assets properly linked in index.html.');
+          "
+
+  security-audit:
+    name: Security & Anti-Vulnerability Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Scan for Hardcoded Secrets & Credentials
+        run: |
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const patterns = [
+              new RegExp('AIza' + '[0-9A-Za-z-_]{35}'),
+              new RegExp('AKIA' + '[0-9A-Z]{16}'),
+              new RegExp('-----BEGIN ' + 'PRIVATE KEY-----'),
+              new RegExp('ghp_' + '[0-9a-zA-Z]{36}'),
+              new RegExp('sk_live_' + '[0-9a-zA-Z]{24}')
+            ];
+            function scanDir(dir) {
+              const files = fs.readdirSync(dir);
+              for (const file of files) {
+                if (file === '.git' || file === 'node_modules' || file === '.github') continue;
+                const fullPath = path.join(dir, file);
+                const stat = fs.statSync(fullPath);
+                if (stat.isDirectory()) {
+                  scanDir(fullPath);
+                } else if (/\.(js|html|json|md|toml|yml)$/.test(file)) {
+                  const content = fs.readFileSync(fullPath, 'utf8');
+                  for (const pattern of patterns) {
+                    if (pattern.test(content)) {
+                      console.error('❌ Potential secret found in file: ' + fullPath);
+                      process.exit(1);
+                    }
+                  }
+                }
+              }
+            }
+            scanDir('.');
+            console.log('✅ Secret leakage scan passed: Zero hardcoded credentials or tokens detected.');
+          "
+
+      - name: Audit Tabnabbing & External Links
+        run: |
+          node -e "
+            const fs = require('fs');
+            const html = fs.readFileSync('index.html', 'utf8');
+            const js = fs.readFileSync('assets/js/app.js', 'utf8');
+            const blankLinkRegex = /<a[^>]*target=[\"']_blank[\"'][^>]*>/gi;
+            const combined = html + '\n' + js;
+            let match;
+            while ((match = blankLinkRegex.exec(combined)) !== null) {
+              if (!match[0].includes('noopener')) {
+                console.error('❌ Target=_blank missing rel=noopener noreferrer: ' + match[0]);
+                process.exit(1);
+              }
+            }
+            console.log('✅ Reverse tabnabbing check passed: All external target=_blank links are protected.');
+          "
+
+      - name: Validate Content Security Policy (CSP)
+        run: |
+          node -e "
+            const fs = require('fs');
+            const html = fs.readFileSync('index.html', 'utf8');
+            const vercel = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
+            if (!html.includes('Content-Security-Policy')) {
+              console.error('❌ Missing Content-Security-Policy meta tag in index.html');
+              process.exit(1);
+            }
+            const hasVercelCsp = vercel.headers.some(h => h.headers.some(header => header.key === 'Content-Security-Policy'));
+            if (!hasVercelCsp) {
+              console.error('❌ Missing Content-Security-Policy in vercel.json');
+              process.exit(1);
+            }
+            console.log('✅ Content Security Policy (CSP) validated in both index.html and vercel.json.');
           "

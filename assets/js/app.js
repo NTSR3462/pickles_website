@@ -7,6 +7,19 @@
 (function () {
   'use strict';
 
+  /**
+   * Security: HTML Entity Sanitizer to prevent Cross-Site Scripting (XSS)
+   */
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   // State Management
   const state = {
     products: PRODUCTS_DATA || [],
@@ -276,16 +289,38 @@
   }
 
   /* ==========================================================================
-     Cart Management (LocalStorage)
+     Cart Management (LocalStorage with Integrity Verification)
      ========================================================================== */
   function loadCartFromStorage() {
     try {
       const stored = localStorage.getItem('achaari_bliss_cart');
       if (stored) {
-        state.cart = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          // Anti-Tampering Security Check:
+          // Re-verify and validate every cart item against canonical PRODUCTS_DATA
+          state.cart = parsed.filter(item => {
+            if (!item || typeof item !== 'object') return false;
+            const product = state.products.find(p => p.id === item.productId);
+            if (!product) return false;
+            const variant = product.variants.find(v => v.weight === item.weight);
+            if (!variant) return false;
+
+            // Enforce trusted properties from canonical source to defeat client-side price tampering
+            item.name = product.name;
+            item.isVeg = product.isVeg;
+            item.price = variant.price;
+            item.image = product.image;
+            item.quantity = Math.max(1, Math.min(99, parseInt(item.quantity, 10) || 1));
+            item.cartKey = `${product.id}_${variant.weight}`;
+            return true;
+          });
+        } else {
+          state.cart = [];
+        }
       }
     } catch (e) {
-      console.warn('LocalStorage not available, resetting cart.', e);
+      console.warn('LocalStorage data corrupted or tampered, resetting cart.', e);
       state.cart = [];
     }
   }
@@ -610,17 +645,25 @@
   function processOrder(e) {
     e.preventDefault();
 
-    const name = document.getElementById('cust-name').value.trim();
-    const phone = document.getElementById('cust-phone').value.trim();
-    const address = document.getElementById('cust-address').value.trim();
-    const city = document.getElementById('cust-city').value.trim();
-    const pincode = document.getElementById('cust-pincode').value.trim();
-    const notes = document.getElementById('cust-notes').value.trim();
+    const rawName = document.getElementById('cust-name').value.trim();
+    const rawPhone = document.getElementById('cust-phone').value.trim();
+    const rawAddress = document.getElementById('cust-address').value.trim();
+    const rawCity = document.getElementById('cust-city').value.trim();
+    const rawPincode = document.getElementById('cust-pincode').value.trim();
+    const rawNotes = document.getElementById('cust-notes').value.trim();
 
-    if (!name || !phone || !address || !city || !pincode) {
+    if (!rawName || !rawPhone || !rawAddress || !rawCity || !rawPincode) {
       alert('Please fill out all required delivery fields.');
       return;
     }
+
+    // Input Sanitization & Bounds Checking to prevent injection/buffer abuse
+    const name = rawName.slice(0, 80);
+    const phone = rawPhone.replace(/[^0-9+ \-()]/g, '').slice(0, 20);
+    const address = rawAddress.slice(0, 200);
+    const city = rawCity.slice(0, 60);
+    const pincode = rawPincode.replace(/[^a-zA-Z0-9 -]/g, '').slice(0, 12);
+    const notes = rawNotes.slice(0, 300);
 
     const orderId = 'AB-' + Math.floor(100000 + Math.random() * 900000);
     const dateStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -657,17 +700,22 @@ ${notes ? `\n📝 *Notes:* ${notes}` : ''}
 Please confirm my order and share estimated dispatch timing. Thank you!`;
 
     const encoded = encodeURIComponent(orderMessage);
-    const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encoded}`;
+    const sanitizedWhatsappNum = STORE_CONFIG.whatsappNumber.replace(/[^0-9]/g, '');
+    const whatsappUrl = `https://wa.me/${sanitizedWhatsappNum}?text=${encoded}`;
 
     // Render Order Success Screen with dynamic live UPI QR Code
     showOrderSuccessScreen(orderId, grandTotal, name, whatsappUrl);
 
     clearCart();
-    window.open(whatsappUrl, '_blank');
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   }
 
   function showOrderSuccessScreen(orderId, grandTotal, customerName, whatsappUrl) {
     if (!elements.checkoutModalBody) return;
+
+    // Sanitize orderId and customerName for safe DOM injection
+    const safeOrderId = escapeHtml(orderId);
+    const safeCustomerName = escapeHtml(customerName);
 
     // Generate Dynamic Live UPI QR Code URL
     const upiDeepLink = `upi://pay?pa=${STORE_CONFIG.upiId}&pn=${encodeURIComponent(STORE_CONFIG.storeName)}&am=${grandTotal}&cu=INR&tn=${encodeURIComponent(`Order ${orderId}`)}`;
@@ -680,13 +728,13 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
           Order Placed Successfully!
         </h3>
         <p style="font-weight: 700; color: #1C1917; font-size: 1.1rem; margin-bottom: 0.5rem;">
-          Order ID: #${orderId}
+          Order ID: #${safeOrderId}
         </p>
         <p style="color: #6B7280; font-size: 0.9rem; max-width: 480px; margin: 0 auto 1.5rem; line-height: 1.5;">
-          Thank you, <strong>${customerName}</strong>! Your order manifest has been prepared. If WhatsApp didn't open automatically, click the button below:
+          Thank you, <strong>${safeCustomerName}</strong>! Your order manifest has been prepared. If WhatsApp didn't open automatically, click the button below:
         </p>
 
-        <a href="${whatsappUrl}" target="_blank" class="btn-checkout-wa" style="display: inline-flex; width: auto; padding: 0.85rem 2rem; margin-bottom: 1.75rem;">
+        <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-checkout-wa" style="display: inline-flex; width: auto; padding: 0.85rem 2rem; margin-bottom: 1.75rem;">
           <span>💬 Open WhatsApp Chat with Kitchen</span>
         </a>
 

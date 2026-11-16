@@ -20,6 +20,7 @@ const PRODUCTS_DATA = [
     rating: 4.9,
     reviewsCount: 342,
     shelfLife: "12 Months",
+    seasonalBadge: "Sun-Cured Terrace Batch",
     oilType: "Cold-Pressed Wood Churned Sesame Oil",
     pairsWith: ["Steaming Sona Masoori Rice & Hot Ghee", "Curd Rice", "Dal Tadka"],
     ingredients: [
@@ -209,6 +210,7 @@ const PRODUCTS_DATA = [
     rating: 4.9,
     reviewsCount: 298,
     shelfLife: "12 Months",
+    seasonalBadge: "Winter Farm Harvest",
     oilType: "Wood-Pressed Mustard Oil",
     pairsWith: ["Paneer Paratha", "Chole Bhature", "Makki Di Roti & Sarson Saag"],
     ingredients: [

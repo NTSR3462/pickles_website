@@ -191,6 +191,7 @@
 
             <div class="card-badges">
               ${product.bestseller ? '<span class="badge-tag badge-bestseller">Best Seller</span>' : ''}
+              ${product.seasonalBadge ? `<span class="badge-tag" style="background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D;">${product.seasonalBadge}</span>` : ''}
               ${!product.isVeg ? '<span class="badge-tag badge-non-veg">Non-Veg Specialty</span>' : ''}
               <span class="badge-tag badge-oil">${product.oilType.includes('Oil-Free') ? '100% Oil-Free' : 'Wood-Pressed Oil'}</span>
             </div>

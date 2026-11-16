@@ -539,6 +539,14 @@
             ${product.ingredients.map(ing => `<span style="background: #F3ECE2; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${ing}</span>`).join('')}
           </div>
 
+          <h4 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7280; margin-bottom: 0.5rem;">Approx. Nutrition Facts (per 100g):</h4>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #FAF7F2; padding: 8px; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.75rem; text-align: center; border: 1px solid #E5E7EB;">
+            <div><strong style="color: #9A2C0E;">⚡ Energy</strong><br>${product.isVeg ? (product.oilType.includes('Oil-Free') ? '110 kcal' : '185 kcal') : '260 kcal'}</div>
+            <div><strong style="color: #15803D;">💪 Protein</strong><br>${product.isVeg ? '2.1g' : '14.5g'}</div>
+            <div><strong style="color: #D97706;">🫒 Fats</strong><br>${product.oilType.includes('Oil-Free') ? '0.2g' : '16.5g'}</div>
+            <div><strong style="color: #4B5563;">🧂 Sodium</strong><br>1150mg</div>
+          </div>
+
           <h4 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6B7280; margin-bottom: 0.5rem;">Craft Highlights:</h4>
           <ul style="padding-left: 1.2rem; font-size: 0.85rem; color: #374151; margin-bottom: 1.5rem; line-height: 1.6;">
             ${product.highlights.map(hl => `<li>${hl}</li>`).join('')}

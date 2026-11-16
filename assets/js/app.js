@@ -206,7 +206,7 @@
       return `
         <article class="product-card" data-product-id="${product.id}">
           <div class="card-img-box">
-            <img src="${product.image}" alt="${product.name}" loading="lazy" />
+            <img src="${product.image}" alt="${product.name}" loading="lazy" decoding="async" onload="this.classList.add('img-ready')" />
             ${fssaiBadge}
 
             <div class="card-badges">

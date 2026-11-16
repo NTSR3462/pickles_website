@@ -698,21 +698,38 @@ a {
   border-color: rgba(217, 119, 6, 0.3);
 }
 
+/* Responsive Image Loading Shimmer Skeleton */
+@keyframes shimmerPulse {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 .card-img-box {
   position: relative;
   height: 220px;
   overflow: hidden;
-  background-color: #F3F4F6;
+  background: linear-gradient(90deg, #F3ECE2 25%, #FAF7F2 50%, #F3ECE2 75%);
+  background-size: 200% 100%;
+  animation: shimmerPulse 1.8s infinite ease-in-out;
 }
 
 .card-img-box img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out, transform 0.6s ease;
 }
 
-.product-card:hover .card-img-box img {
+.card-img-box img.img-ready {
+  opacity: 1;
+}
+
+.product-card:hover .card-img-box img.img-ready {
   transform: scale(1.08);
 }
 

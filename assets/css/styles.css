@@ -41,6 +41,31 @@
   padding: 0;
 }
 
+/* Accessible Focus States */
+:focus-visible {
+  outline: 3px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+.skip-to-content {
+  position: absolute;
+  top: -60px;
+  left: 1rem;
+  background: var(--primary-color);
+  color: #FFFFFF;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+  z-index: 1000;
+  transition: top 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+}
+
 html {
   scroll-behavior: smooth;
   font-size: 16px;

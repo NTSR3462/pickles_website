@@ -222,6 +222,10 @@
               </div>
             ` : ''}
 
+            <div class="dispatch-eta-badge">
+              <span>⚡ Fresh Batch: Dispatches in 24 hrs</span>
+            </div>
+
             <!-- Weight Variant Selector -->
             <div class="weight-selector-box">
               <label>Select Jar Size:</label>

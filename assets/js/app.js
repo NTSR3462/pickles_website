@@ -41,7 +41,8 @@
       diet: null,
       spice: null,
       pairing: null
-    }
+    },
+    appliedCoupon: null
   };
 
   // DOM Elements Cache
@@ -432,12 +433,36 @@
       }
     }
 
+    // Promo Discount Calculation
+    let discountAmount = 0;
+    if (state.appliedCoupon && subtotal > 0) {
+      if (state.appliedCoupon.type === 'percent') {
+        discountAmount = Math.round((subtotal * state.appliedCoupon.value) / 100);
+      } else if (state.appliedCoupon.type === 'flat') {
+        discountAmount = Math.min(subtotal, state.appliedCoupon.value);
+      }
+    }
+
+    const discountedSubtotal = Math.max(0, subtotal - discountAmount);
     const freeThreshold = STORE_CONFIG.freeShippingThreshold;
-    const isFree = subtotal >= freeThreshold;
+    const isFree = discountedSubtotal >= freeThreshold;
     const shippingFee = (subtotal > 0 && !isFree) ? STORE_CONFIG.standardShippingFee : 0;
-    const grandTotal = subtotal > 0 ? (subtotal + shippingFee) : 0;
+    const grandTotal = subtotal > 0 ? (discountedSubtotal + shippingFee) : 0;
 
     if (elements.cartSubtotal) elements.cartSubtotal.textContent = `${STORE_CONFIG.currencySymbol}${subtotal}`;
+    
+    // Discount row
+    const discountRow = document.getElementById('discount-row');
+    const discountEl = document.getElementById('cart-discount');
+    if (discountRow && discountEl) {
+      if (discountAmount > 0) {
+        discountRow.style.display = 'flex';
+        discountEl.textContent = `-${STORE_CONFIG.currencySymbol}${discountAmount}`;
+      } else {
+        discountRow.style.display = 'none';
+      }
+    }
+
     if (elements.cartShipping) {
       elements.cartShipping.textContent = subtotal === 0 ? `${STORE_CONFIG.currencySymbol}0` : (isFree ? 'FREE' : `${STORE_CONFIG.currencySymbol}${shippingFee}`);
       elements.cartShipping.style.color = isFree ? '#15803D' : 'inherit';
@@ -1132,6 +1157,38 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
     });
   }
 
+  function applyCoupon() {
+    const input = document.getElementById('coupon-input');
+    const msgEl = document.getElementById('coupon-applied-msg');
+    if (!input) return;
+    const code = input.value.trim().toUpperCase();
+
+    const coupons = {
+      'FIRST10': { type: 'percent', value: 10, label: '10% OFF Welcome Discount' },
+      'ACHAAR50': { type: 'flat', value: 50, label: '₹50 OFF Instant Festive Savings' },
+      'GRANDMA': { type: 'percent', value: 15, label: '15% OFF Heirloom Batch Discount' }
+    };
+
+    if (coupons[code]) {
+      state.appliedCoupon = coupons[code];
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#15803D';
+        msgEl.textContent = `🎉 Coupon applied: ${coupons[code].label}!`;
+      }
+      showToast(`Coupon ${code} applied successfully! 🎁`);
+    } else {
+      state.appliedCoupon = null;
+      if (msgEl) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#DC2626';
+        msgEl.textContent = `❌ Invalid coupon code. Try FIRST10 or ACHAAR50`;
+      }
+      showToast('Invalid coupon code.');
+    }
+    updateCartUI();
+  }
+
   // Expose methods to global scope
   window.app = {
     selectVariant,
@@ -1152,7 +1209,8 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
     selectQuizOption,
     openArchitectureModal,
     copyResumeBullets,
-    shareProduct
+    shareProduct,
+    applyCoupon
   };
 
   // Run on DOM ready

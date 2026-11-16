@@ -444,9 +444,20 @@
 
     <!-- Cart Footer & Checkout Button -->
     <div class="cart-footer">
+      <!-- Promo Code Box -->
+      <div class="promo-box" style="margin-bottom: 0.75rem; display: flex; gap: 6px;">
+        <input type="text" id="coupon-input" placeholder="Promo code (e.g. FIRST10)" style="flex-grow: 1; padding: 6px 10px; font-size: 0.8rem; border: 1px solid #E5E7EB; border-radius: 6px; text-transform: uppercase;" />
+        <button type="button" class="btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="window.app.applyCoupon()">Apply</button>
+      </div>
+      <div id="coupon-applied-msg" style="display: none; font-size: 0.75rem; color: #15803D; font-weight: 700; margin-bottom: 0.5rem;"></div>
+
       <div class="summary-row">
         <span>Items Subtotal:</span>
         <span id="cart-subtotal" style="font-weight: 700;">₹0</span>
+      </div>
+      <div id="discount-row" class="summary-row" style="display: none; color: #15803D;">
+        <span>Promo Discount:</span>
+        <span id="cart-discount" style="font-weight: 700;">-₹0</span>
       </div>
       <div class="summary-row">
         <span>Packaging & Delivery:</span>

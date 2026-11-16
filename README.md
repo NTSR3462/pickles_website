@@ -11,7 +11,7 @@
 
 A high-converting, mobile-first Progressive Web App (PWA) storefront for artisanal, homemade pickles and chutneys. Engineered with a **$0.00/month recurring cost architecture** using JAMstack edge caching, client-side state hydration, and direct WhatsApp + dynamic UPI QR order fulfillment.
 
-[Live Features](#-features) • [System Architecture](docs/ARCHITECTURE.md) • [SRS Document](docs/SRS_DOCUMENT.md) • [Deployment Guide](docs/DEPLOYMENT_GUIDE.md)
+[Live Features](#-features) • [System Architecture](docs/ARCHITECTURE.md) • [SRS Document](docs/SRS_DOCUMENT.md) • [Data Dictionary](docs/DATA_DICTIONARY.md) • [Deployment Guide](docs/DEPLOYMENT_GUIDE.md)
 
 </div>
 
@@ -67,7 +67,10 @@ pickles_website/
 ├── docs/
 │   ├── SRS_DOCUMENT.md           # IEEE 830 Software Requirements Specification
 │   ├── ARCHITECTURE.md           # High-level architecture & design patterns
+│   ├── DATA_DICTIONARY.md        # Catalog schema & data tier specification
 │   └── DEPLOYMENT_GUIDE.md       # Zero-cost hosting walkthrough
+├── tests/
+│   └── cart.test.js              # Automated unit tests for cart & calculations
 ├── CHANGELOG.md                  # Semantic release history
 ├── CODE_OF_CONDUCT.md            # Contributor Covenant v2.1 standard
 ├── CONTRIBUTING.md               # Guidelines for community contributions

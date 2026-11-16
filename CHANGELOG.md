@@ -5,6 +5,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.1.0] - 2026-11-16
+### Added
+- **Multi-Currency Diaspora Converter**:
+  - Live currency toggle (INR ₹, USD $, GBP £, EUR €) for international NRI and diaspora gifting orders.
+- **Interactive Verified Customer Reviews**:
+  - Customer review modal with star ratings, location tagging, and instant client-side wall publishing.
+- **Real-Time FAQ Search**:
+  - Live searchable accordion covering shelf life, oil-curing safety, shipping timelines, and hygienic meat preparation.
+- **Automated Unit Testing Suite**:
+  - Dedicated zero-dependency test runner (`tests/cart.test.js`) covering catalog integrity, cart math, coupon deductions, shipping thresholds, currency conversion, and XSS sanitization.
+  - Integrated into GitHub Actions CI pipeline (`.github/workflows/ci.yml`).
+- **Data Dictionary Specification**:
+  - Comprehensive documentation (`docs/DATA_DICTIONARY.md`) detailing data types, schemas, constraints, and NPCI UPI URI standards.
+- **Performance & Micro-Interactions**:
+  - Responsive image loading shimmer skeleton placeholder to eliminate Cumulative Layout Shift (CLS).
+  - Tactile button press feedback, weight variant scale animations, and elevated card hover shadows.
+  - Estimated dispatch ETA indicator (`⚡ Fresh Batch: Dispatches in 24 hrs`).
+- **Seasonal Harvest & Freshness Badges**:
+  - Highlight tags for sun-cured terrace batches, winter harvest gooseberry, and Konkani coastal seasonal batches.
+- **Accessibility & PWA Offline Experience**:
+  - High-contrast accessible keyboard skip link and focus rings (`:focus-visible`).
+  - Real-time network connectivity offline notification banner.
+- **Order Printing & Invoicing**:
+  - Dedicated `@media print` stylesheet for formatted printable receipts and kitchen packing manifests.
+- **Promo Discount Coupon Engine**:
+  - Instant discount deduction supporting `FIRST10` (10% off), `ACHAAR50` (₹50 off), and `GRANDMA` (15% off).
+- **SEO & Social Discovery**:
+  - Complete OpenGraph, Twitter card tags, and JSON-LD `Product` structured schema metadata.
+
+---
+
 ## [2.0.0] - 2026-11-15
 ### Added
 - **Gourmet Non-Vegetarian Pickle Line**:

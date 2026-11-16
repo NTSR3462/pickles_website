@@ -1113,6 +1113,23 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
         document.body.style.overflow = '';
       }
     });
+
+    // Scroll Progress & Back to Top Toggle
+    const progressBar = document.getElementById('scroll-progress-indicator');
+    const backToTopBtn = document.getElementById('btn-back-to-top');
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      if (progressBar) progressBar.style.width = scrolled + '%';
+      if (backToTopBtn) {
+        if (winScroll > 350) {
+          backToTopBtn.classList.add('visible');
+        } else {
+          backToTopBtn.classList.remove('visible');
+        }
+      }
+    });
   }
 
   // Expose methods to global scope

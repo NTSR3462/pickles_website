@@ -47,6 +47,9 @@
 </head>
 <body>
 
+  <!-- Top Scroll Progress Indicator -->
+  <div id="scroll-progress-indicator" class="scroll-progress-bar"></div>
+
   <!-- Top Announcement Bar -->
   <div class="announcement-bar">
     <span class="badge">Fresh Batches</span>
@@ -489,6 +492,11 @@
       </div>
     </div>
   </div>
+
+  <!-- Back to Top Floating Button -->
+  <button id="btn-back-to-top" class="back-to-top-btn" aria-label="Back to top of page" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+    ▲
+  </button>
 
   <!-- Toast Notification -->
   <div id="toast-notification" class="toast-notification"></div>

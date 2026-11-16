@@ -792,9 +792,14 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
           </p>
         </div>
 
-        <button class="btn-outline" style="margin-top: 2rem;" onclick="window.app.closeModal('checkout-modal')">
-          Done & Return to Store
-        </button>
+        <div style="display: flex; justify-content: center; gap: 0.75rem; margin-top: 2rem;">
+          <button class="btn-outline" onclick="window.print()">
+            🖨️ Print Receipt
+          </button>
+          <button class="btn-primary" onclick="window.app.closeModal('checkout-modal')">
+            Done & Return
+          </button>
+        </div>
       </div>
     `;
   }

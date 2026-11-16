@@ -1950,3 +1950,37 @@ a {
   top: 0;
   z-index: 105;
 }
+
+/* ==========================================================================
+   Print Stylesheet for Invoices & Receipts
+   ========================================================================== */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #checkout-modal,
+  #checkout-modal * {
+    visibility: visible;
+  }
+  #checkout-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #FFFFFF;
+    box-shadow: none;
+  }
+  .modal-card {
+    box-shadow: none;
+    max-height: none;
+    border: none;
+  }
+  .btn-modal-close,
+  .btn-checkout-wa,
+  .btn-outline,
+  .btn-primary,
+  .scroll-progress-bar,
+  .back-to-top-btn {
+    display: none !important;
+  }
+}

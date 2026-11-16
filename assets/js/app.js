@@ -1154,8 +1154,11 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
       elements.checkoutBtn.addEventListener('click', openCheckoutModal);
     }
 
-    // FAQs Accordion
+    // FAQs Accordion & Live Filter
     const faqItems = document.querySelectorAll('.faq-item');
+    const faqInput = document.getElementById('faq-search-input');
+    const faqNoResults = document.getElementById('faq-no-results');
+
     faqItems.forEach(item => {
       const q = item.querySelector('.faq-question');
       if (q) {
@@ -1168,6 +1171,28 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
         });
       }
     });
+
+    if (faqInput && faqItems.length > 0) {
+      faqInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        let matchCount = 0;
+
+        faqItems.forEach(item => {
+          const text = item.textContent.toLowerCase();
+          if (!query || text.includes(query)) {
+            item.style.display = 'block';
+            if (query) item.setAttribute('open', '');
+            matchCount++;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        if (faqNoResults) {
+          faqNoResults.style.display = matchCount === 0 ? 'block' : 'none';
+        }
+      });
+    }
 
     // Close Modals on click outside
     window.addEventListener('click', (e) => {

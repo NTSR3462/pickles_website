@@ -81,6 +81,7 @@
           <li><a href="#non-veg-spotlight">Non-Veg Special</a></li>
           <li><a href="#tradition">Our Craft</a></li>
           <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#faqs">FAQs</a></li>
         </ul>
 
         <div class="header-actions">
@@ -384,6 +385,56 @@
 
       <div style="text-align: center; margin-top: 2.5rem;">
         <button id="btn-open-review" class="btn-outline" style="background:#fff; border-color: var(--primary-color); color: var(--primary-color); font-weight:700;">✍️ Share Your Review</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Frequently Asked Questions (FAQ) Section -->
+  <section id="faqs" class="faq-section" style="padding: 4rem 0; background: #FAF7F2; border-top: 1px solid #F3ECE2;">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 2rem;">
+        <span class="section-subtitle">Clarifying Your Questions</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-desc">Everything you need to know about our heirloom recipes, non-veg preparation, storage, and shipping.</p>
+      </div>
+
+      <div class="faq-search-box" style="max-width: 480px; margin: 0 auto 2.5rem auto;">
+        <input 
+          type="text" 
+          id="faq-search-input" 
+          placeholder="🔍 Search questions (e.g. shelf life, chicken pickle, shipping, glass jar)..." 
+          style="width: 100%; padding: 12px 18px; border-radius: var(--radius-full); border: 1px solid var(--border-color); font-size: 0.9rem; font-family: inherit; box-shadow: var(--shadow-sm); outline: none;"
+        />
+      </div>
+
+      <div id="faq-list" class="faq-list" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+        <details class="faq-item" style="background: #FFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 1.25rem;">
+          <summary style="font-weight: 700; cursor: pointer; color: var(--text-main); font-size: 1rem;">How long do your pickles last once opened?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">Our classic vegetarian pickles stay fresh for 12 months, while meat pickles (Andhra Chicken, Mutton, Prawns) stay peak delicious for 6 months. Always use a dry spoon and ensure a thin layer of oil rests over the top to naturally preserve freshness without artificial chemicals.</p>
+        </details>
+
+        <details class="faq-item" style="background: #FFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 1.25rem;">
+          <summary style="font-weight: 700; cursor: pointer; color: var(--text-main); font-size: 1rem;">How are the Non-Veg pickles prepared safely?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">Our non-veg pickles are prepared under strict hygienic conditions. Fresh boneless chicken chunks, coastal prawns, and tender goat meat are slow-fried in wood-churned cold-pressed groundnut oil until crisp and moisture-free, then steeped with ground spices and lemon juice for an irresistible umami punch.</p>
+        </details>
+
+        <details class="faq-item" style="background: #FFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 1.25rem;">
+          <summary style="font-weight: 700; cursor: pointer; color: var(--text-main); font-size: 1rem;">Do you use plastic bottles or artificial preservatives?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">Never! We strictly use heavy food-grade glass jars and airtight lids. We never add synthetic sodium benzoate, artificial colors, or chemical preservatives. Natural rock salt, turmeric, lemon juice, and cold-pressed oils are our only preservatives.</p>
+        </details>
+
+        <details class="faq-item" style="background: #FFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 1.25rem;">
+          <summary style="font-weight: 700; cursor: pointer; color: var(--text-main); font-size: 1rem;">How fast is shipping and is it free?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">Every batch dispatches within 24–48 hours of order confirmation. Delivery takes 3–5 business days across all Indian PIN codes. Orders over ₹500 enjoy 100% FREE delivery nationwide.</p>
+        </details>
+
+        <details class="faq-item" style="background: #FFF; border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem 1.25rem;">
+          <summary style="font-weight: 700; cursor: pointer; color: var(--text-main); font-size: 1rem;">How does WhatsApp direct order and UPI payment work?</summary>
+          <p style="margin-top: 0.75rem; color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">When you click checkout, your selected items and address format into a clean WhatsApp message sent straight to our artisan kitchen line. You can scan our direct UPI QR code or pay via GPay/PhonePe/Paytm with zero payment gateway processing fees.</p>
+        </details>
+      </div>
+      <div id="faq-no-results" style="display: none; text-align: center; color: var(--text-muted); margin-top: 1.5rem; font-size: 0.95rem;">
+        No matching questions found. Ask us directly on WhatsApp! 💬
       </div>
     </div>
   </section>

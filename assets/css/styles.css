@@ -1976,6 +1976,26 @@ a {
   z-index: 105;
 }
 
+/* Currency Selector */
+.currency-select {
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-white);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+  margin-right: 0.5rem;
+}
+
+.currency-select:hover,
+.currency-select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
 /* Delivery ETA Badge */
 .dispatch-eta-badge {
   font-size: 0.72rem;

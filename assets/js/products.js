@@ -399,6 +399,13 @@ const STORE_CONFIG = {
   // Seller's WhatsApp Number for completely free zero-commission ordering
   whatsappNumber: "919876543210", 
   currencySymbol: "₹",
+  activeCurrency: "INR",
+  currencies: {
+    INR: { symbol: "₹", rate: 1.0, name: "Indian Rupee" },
+    USD: { symbol: "$", rate: 0.012, name: "US Dollar" },
+    GBP: { symbol: "£", rate: 0.0095, name: "British Pound" },
+    EUR: { symbol: "€", rate: 0.011, name: "Euro" }
+  },
   freeShippingThreshold: 500, // Free delivery above ₹500
   standardShippingFee: 50,
   upiId: "achaaribliss@upi", // For instant zero-fee QR payment

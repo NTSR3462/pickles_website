@@ -45,6 +45,26 @@
     appliedCoupon: null
   };
 
+  function formatPrice(amountINR) {
+    if (!amountINR && amountINR !== 0) return '';
+    const active = STORE_CONFIG.activeCurrency || 'INR';
+    const cur = (STORE_CONFIG.currencies && STORE_CONFIG.currencies[active]) || { symbol: '₹', rate: 1 };
+    if (active === 'INR' || cur.rate === 1) {
+      return `${cur.symbol}${amountINR}`;
+    }
+    const converted = (amountINR * cur.rate).toFixed(2);
+    return `${cur.symbol}${converted}`;
+  }
+
+  function changeCurrency(code) {
+    if (!STORE_CONFIG.currencies || !STORE_CONFIG.currencies[code]) return;
+    STORE_CONFIG.activeCurrency = code;
+    STORE_CONFIG.currencySymbol = STORE_CONFIG.currencies[code].symbol;
+    filterAndRenderProducts();
+    updateCartUI();
+    showToast(`Currency converted to ${code} (${STORE_CONFIG.currencySymbol}) 💱`);
+  }
+
   // DOM Elements Cache
   const elements = {
     productsGrid: document.getElementById('products-grid'),
@@ -245,8 +265,8 @@
             <!-- Price and Add to Cart -->
             <div class="card-bottom-row">
               <div class="price-display">
-                <span class="current-price">${STORE_CONFIG.currencySymbol}${currentVariant.price}</span>
-                ${currentVariant.originalPrice ? `<span class="orig-price">${STORE_CONFIG.currencySymbol}${currentVariant.originalPrice}</span>` : ''}
+                <span class="current-price">${formatPrice(currentVariant.price)}</span>
+                ${currentVariant.originalPrice ? `<span class="orig-price">${formatPrice(currentVariant.originalPrice)}</span>` : ''}
               </div>
               <button 
                 class="btn-add-cart" 
@@ -277,9 +297,9 @@
 
       const currentPriceEl = card.querySelector('.current-price');
       const origPriceEl = card.querySelector('.orig-price');
-      if (currentPriceEl) currentPriceEl.textContent = `${STORE_CONFIG.currencySymbol}${variant.price}`;
+      if (currentPriceEl) currentPriceEl.textContent = formatPrice(variant.price);
       if (origPriceEl) {
-        origPriceEl.textContent = variant.originalPrice ? `${STORE_CONFIG.currencySymbol}${variant.originalPrice}` : '';
+        origPriceEl.textContent = variant.originalPrice ? formatPrice(variant.originalPrice) : '';
       }
     }
   }
@@ -420,7 +440,7 @@
             <img src="${item.image}" alt="${item.name}" class="cart-item-img" />
             <div class="cart-item-details">
               <div class="cart-item-title">${item.name} ${item.isVeg ? '🟢' : '🔴'}</div>
-              <div class="cart-item-variant">Size: <strong>${item.weight}</strong> • ${STORE_CONFIG.currencySymbol}${item.price}</div>
+              <div class="cart-item-variant">Size: <strong>${item.weight}</strong> • ${formatPrice(item.price)}</div>
               <div class="cart-item-actions">
                 <div class="qty-control">
                   <button class="qty-btn" onclick="window.app.updateQuantity('${item.cartKey}', -1)">−</button>
@@ -428,7 +448,7 @@
                   <button class="qty-btn" onclick="window.app.updateQuantity('${item.cartKey}', 1)">+</button>
                 </div>
                 <div style="display: flex; align-items: center;">
-                  <span class="cart-item-price">${STORE_CONFIG.currencySymbol}${item.price * item.quantity}</span>
+                  <span class="cart-item-price">${formatPrice(item.price * item.quantity)}</span>
                   <button class="btn-remove-item" onclick="window.app.removeFromCart('${item.cartKey}')" title="Remove item">✕</button>
                 </div>
               </div>
@@ -454,7 +474,7 @@
     const shippingFee = (subtotal > 0 && !isFree) ? STORE_CONFIG.standardShippingFee : 0;
     const grandTotal = subtotal > 0 ? (discountedSubtotal + shippingFee) : 0;
 
-    if (elements.cartSubtotal) elements.cartSubtotal.textContent = `${STORE_CONFIG.currencySymbol}${subtotal}`;
+    if (elements.cartSubtotal) elements.cartSubtotal.textContent = formatPrice(subtotal);
     
     // Discount row
     const discountRow = document.getElementById('discount-row');
@@ -462,21 +482,21 @@
     if (discountRow && discountEl) {
       if (discountAmount > 0) {
         discountRow.style.display = 'flex';
-        discountEl.textContent = `-${STORE_CONFIG.currencySymbol}${discountAmount}`;
+        discountEl.textContent = `-${formatPrice(discountAmount)}`;
       } else {
         discountRow.style.display = 'none';
       }
     }
 
     if (elements.cartShipping) {
-      elements.cartShipping.textContent = subtotal === 0 ? `${STORE_CONFIG.currencySymbol}0` : (isFree ? 'FREE' : `${STORE_CONFIG.currencySymbol}${shippingFee}`);
+      elements.cartShipping.textContent = subtotal === 0 ? formatPrice(0) : (isFree ? 'FREE' : formatPrice(shippingFee));
       elements.cartShipping.style.color = isFree ? '#15803D' : 'inherit';
     }
-    if (elements.cartTotal) elements.cartTotal.textContent = `${STORE_CONFIG.currencySymbol}${grandTotal}`;
+    if (elements.cartTotal) elements.cartTotal.textContent = formatPrice(grandTotal);
 
     if (elements.shippingTrackerMsg && elements.shippingProgressBar) {
       if (subtotal === 0) {
-        elements.shippingTrackerMsg.innerHTML = `Add items worth <strong>${STORE_CONFIG.currencySymbol}${freeThreshold}</strong> for <strong>FREE Delivery</strong>!`;
+        elements.shippingTrackerMsg.innerHTML = `Add items worth <strong>${formatPrice(freeThreshold)}</strong> for <strong>FREE Delivery</strong>!`;
         elements.shippingProgressBar.style.width = '0%';
       } else if (isFree) {
         elements.shippingTrackerMsg.innerHTML = `🎉 <strong>Congratulations!</strong> You have unlocked <strong>FREE Delivery</strong>!`;
@@ -484,7 +504,7 @@
       } else {
         const remaining = freeThreshold - subtotal;
         const pct = Math.min(100, Math.round((subtotal / freeThreshold) * 100));
-        elements.shippingTrackerMsg.innerHTML = `Add <strong>${STORE_CONFIG.currencySymbol}${remaining}</strong> more to unlock <strong>FREE Delivery</strong>!`;
+        elements.shippingTrackerMsg.innerHTML = `Add <strong>${formatPrice(remaining)}</strong> more to unlock <strong>FREE Delivery</strong>!`;
         elements.shippingProgressBar.style.width = `${pct}%`;
       }
     }
@@ -559,7 +579,7 @@
 
           <div style="border-top: 1px solid #E5E7EB; padding-top: 1rem; display: flex; align-items: center; justify-content: space-between;">
             <div>
-              <span style="font-size: 1.5rem; font-weight: 800; color: #1C1917;">${STORE_CONFIG.currencySymbol}${variant.price}</span>
+              <span style="font-size: 1.5rem; font-weight: 800; color: #1C1917;">${formatPrice(variant.price)}</span>
               <span style="font-size: 0.85rem; color: #6B7280;"> / ${variant.weight}</span>
             </div>
             <button class="btn-primary" onclick="window.app.handleAddToCart('${product.id}'); window.app.closeModal('quick-view-modal');">
@@ -601,12 +621,12 @@
           ${state.cart.map(item => `
             <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; color: #374151;">
               <span>${item.name} (${item.weight}) x ${item.quantity} ${item.isVeg ? '🟢' : '🔴'}</span>
-              <span style="font-weight: 700;">${STORE_CONFIG.currencySymbol}${item.price * item.quantity}</span>
+              <span style="font-weight: 700;">${formatPrice(item.price * item.quantity)}</span>
             </div>
           `).join('')}
           <div style="border-top: 1px dashed #D1D5DB; margin-top: 0.5rem; padding-top: 0.5rem; display: flex; justify-content: space-between; font-weight: 800; font-size: 0.95rem; color: #1C1917;">
-            <span>Grand Total (incl. ${isFree ? 'FREE Delivery' : `${STORE_CONFIG.currencySymbol}${shippingFee} delivery`}):</span>
-            <span>${STORE_CONFIG.currencySymbol}${grandTotal}</span>
+            <span>Grand Total (incl. ${isFree ? 'FREE Delivery' : `${formatPrice(shippingFee)} delivery`}):</span>
+            <span>${formatPrice(grandTotal)}</span>
           </div>
         </div>
 
@@ -662,7 +682,7 @@
           </div>
 
           <button type="submit" class="btn-checkout-wa" style="margin-top: 0.5rem;">
-            <span>💬 Send Order via WhatsApp (${STORE_CONFIG.currencySymbol}${grandTotal})</span>
+            <span>💬 Send Order via WhatsApp (${formatPrice(grandTotal)})</span>
           </button>
         </form>
       `;
@@ -1291,7 +1311,9 @@ Please confirm my order and share estimated dispatch timing. Thank you!`;
     openArchitectureModal,
     copyResumeBullets,
     shareProduct,
-    applyCoupon
+    applyCoupon,
+    changeCurrency,
+    formatPrice
   };
 
   // Run on DOM ready
